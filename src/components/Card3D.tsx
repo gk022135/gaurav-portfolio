@@ -4,8 +4,19 @@ import Image from "next/image";
 import React from "react";
 import X from '../app/X.png'
 import { CardBody, CardContainer, CardItem } from "./ui/3d-card";
+import { StaticImageData } from 'next/image';
 
-export function ThreeDCardDemo({card01 : any}) {
+interface CardProps {
+  card01: {
+    head: string;
+    para: string;
+    image: StaticImageData; // Updated to accept StaticImageData
+    url: string;
+  };
+}
+
+
+export function ThreeDCardDemo({card01} :CardProps) {
   // console.log("upcoming card data ",card01);
   return (
     <CardContainer className="inter-var">
