@@ -5,7 +5,7 @@ import Image from "next/image";
 
 import X from '../app/X.png'
 
-export function BackgroundGradientDemo({obj1}) {
+export function BackgroundGradientDemo({obj1:any}) {
     console.log(obj1.heading)
   return (
     <div>
