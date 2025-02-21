@@ -8,8 +8,8 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true, // 🚫 Ignores ESLint errors during build
   },
+  output: 'standalone',
 };
-
-
+  
 
 export default nextConfig;
