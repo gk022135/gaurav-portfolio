@@ -44,8 +44,13 @@ function Navbar({ className }: { className?: string }) {
   const [active, setActive] = useState<string | null>(null);
 
   return (
-    <div className={cn("fixed w-[400px] sm:fixed top-10 inset-x-0 max-w-2xl mx-auto z-50 ", className)}>
-      <Menu setActive={setActive}>
+<div
+  className={cn(
+    "fixed w-[400px] sm:fixed top-10 inset-x-0 max-w-2xl mx-auto z-50",
+    "bg-[#111827] border border-gray-700 rounded-xl shadow-lg backdrop-blur-md",
+    className
+  )}
+>      <Menu setActive={setActive}>
         <MenuItem setActive={setActive} active={active} item="Projets">
           <div className="flex flex-col space-y-4 text-sm">
             <HoveredLink href="/web-dev">Qr Entry-Exit System</HoveredLink>
