@@ -29,10 +29,10 @@ function Navbar({ className }: { className?: string }) {
       <Menu setActive={setActive}>
         <MenuItem setActive={setActive} active={active} item="Projets">
           <div className="flex flex-col space-y-4 text-sm">
-            <HoveredLink href="/web-dev">Qr Entry-Exit System</HoveredLink>
-            <HoveredLink href="/interface-design">ShopEase </HoveredLink>
-            <HoveredLink href="/seo">Web-chat App</HoveredLink>
-            <HoveredLink href="/branding">My Blogs</HoveredLink>
+            <HoveredLink href="https://frontend-uniator.vercel.app/">smvDeX</HoveredLink>
+            <HoveredLink href="/projects/Qr-system">Qr Entry Exit </HoveredLink>
+            <HoveredLink href="/projects/chat-app">Web-chat App</HoveredLink>
+            <HoveredLink href="/projects/Todo">Todo</HoveredLink>
           </div>
         </MenuItem>
         <MenuItem setActive={setActive} active={active} item="Coding Platforms">
