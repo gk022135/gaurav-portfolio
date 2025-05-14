@@ -39,10 +39,10 @@ export default function All() {
     }
 
     const obj4 = {
-        heading: "CodeCollab :- working on it",
-        para: "A platfromm where evry one make work on sme code and resolve error if any at real time  similar to google docs",
+        heading: "Shop :- ecommerce",
+        para: "Get the experrenc on e-commerce how they work, how redux toolkit is used for adding product cart",
         image: CodeCollab,
-        url : 'projects/collab'
+        url : 'https://my-shop-app.vercel.app/'
     }
     const obj5 = {
         heading: "Todo app",
