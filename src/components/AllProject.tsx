@@ -52,7 +52,7 @@ export default function All() {
     }
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 py-10 max-w-7xl mx-auto">
+        <div id="projects" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 py-10 max-w-7xl mx-auto">
             <BackgroundGradientDemo obj1={obj0} />
             <BackgroundGradientDemo obj1={obj1} />
             <BackgroundGradientDemo obj1={obj2} />

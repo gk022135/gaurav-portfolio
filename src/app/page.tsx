@@ -8,11 +8,13 @@ import { AnimatedTestimonialsDemo } from "@/components/Learn";
 import TechMarquee from "@/components/AllLearn";
 import Footer from "@/components/Footer";
 import Timeline from "@/components/Timeline";
+import Hero from "@/components/Hero";
 
 export default function Home() {
   return (
     <div>
       <NavbarDemo />
+      <Hero
       <HeroSection />
       <TechMarquee />
 
