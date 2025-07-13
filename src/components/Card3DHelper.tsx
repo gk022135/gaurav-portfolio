@@ -5,9 +5,9 @@ import { Code,Link2 } from "lucide-react";
 export default function CardHelper() {
     const codingPlatforms = [
         { name: "LeetCode", solved: 470, total: 3000, rating: 1350, color: "bg-yellow-500" , url : "https://leetcode.com/u/Gaurav_krrr/"},
-        { name: "GeeksForGeeks", solved: 180, total: 500, rating: 1750, color: "bg-orange-500" , url : "https://www.geeksforgeeks.org/user/gauravkrrr/"},
-        { name: "Codeforces", solved: 120, total: 300, rating: 1600, color: "bg-blue-500", url : "https://codeforces.com/profile/gk022135" },
-        { name: "HackerRank", solved: 95, total: 150, rating: 1900, color: "bg-green-500", url : "https://www.hackerrank.com/profile/gk022135" }
+        { name: "GeeksForGeeks", solved: 180, total: 2000, rating: 0, color: "bg-orange-500" , url : "https://www.geeksforgeeks.org/user/gauravkrrr/"},
+        { name: "Codeforces", solved: 5, total: 3000, rating: 0, color: "bg-blue-500", url : "https://codeforces.com/profile/gk022135" },
+        { name: "HackerRank", solved: 50, total: 3000, rating: 0, color: "bg-green-500", url : "https://www.hackerrank.com/profile/gk022135" }
     ];
 
 
