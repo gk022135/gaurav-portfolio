@@ -1,51 +1,54 @@
 import Link from "next/link";
-import { Button } from "./moving-border";
-import { Spotlight } from "./Spotlight";
+
+
+import { Github, Linkedin, Instagram, Twitter, Mail, Phone, MapPin, Code, Star, Calendar, ExternalLink, ChevronDown, Menu, X } from 'lucide-react';
 
 function HeroSection() {
     return (
-        <div className="relative w-full h-auto md:h-[42rem] flex flex-col items-center justify-center overflow-hidden px-4 md:px-8 py-20">
-            {/* Background Spotlight */}
-            <Spotlight
-                className="-top-40 left-0 md:left-40 md:-top-24 scale-150 opacity-40"
-                fill="white"
-            />
-
-            {/* Content */}
-            <div className="relative z-10 max-w-5xl mx-auto text-center">
-                {/* Title */}
-                <h1 className="text-4xl md:text-7xl font-extrabold bg-gradient-to-r from-white via-slate-300 to-neutral-500 bg-clip-text text-transparent leading-tight tracking-wide drop-shadow-lg">
-                    Gaurav Krrr
-                </h1>
-
-                {/* Card Style Description Box */}
-                <div className="bg-black/70 dark:bg-zinc-900 border border-white/10 backdrop-blur-md mt-10 rounded-3xl px-6 py-10 md:px-16 md:py-12 shadow-[0_0_40px_-10px_rgba(255,255,255,0.1)]">
-                    <p className="text-neutral-300 text-base md:text-lg leading-relaxed md:leading-8 max-w-3xl mx-auto">
-                        Hi, I'm <span className="text-teal-400 font-semibold">Gaurav Kumar</span>, a passionate 
-                        <span className="text-teal-400 font-semibold"> Full-Stack Web Developer</span> skilled in the 
-                        <span className="text-teal-400 font-semibold"> MERN stack</span>. I love building scalable apps and solving real-world problems through clean and efficient code.
+        <section className="min-h-screen flex items-center justify-center relative px-4">
+            <div className="text-center mt-0 max-w-4xl mx-auto">
+                <div className="mb-8">
+                    <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-6xl font-bold">
+                        GK
+                    </div>
+                    <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                        Gaurav Kumar
+                    </h1>
+                    <p className="text-xl md:text-2xl text-gray-300 mb-8">
+                        Full Stack Developer & Problem Solver
                     </p>
-
-                    <p className="text-neutral-400 text-base md:text-lg mt-6 leading-relaxed md:leading-8 max-w-3xl mx-auto">
-                        I've worked on projects like a 
-                        <span className="text-amber-400 font-semibold"> QR-based Entry-Exit System</span> for universities, a 
-                        <span className="text-amber-400 font-semibold"> real-time chat web application</span>, and I'm currently exploring 
-                        <span className="text-amber-400 font-semibold"> real-time code collaboration tools</span> and 
-                        <span className="text-amber-400 font-semibold"> event management systems</span>.
-                    </p>
+                    <div className="flex flex-wrap justify-center gap-4 mb-8">
+                        <span className="px-4 py-2 bg-blue-500/20 border border-blue-500/30 rounded-full text-blue-300">
+                            React/Nextjs Developer
+                        </span>
+                        <span className="px-4 py-2 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-300">
+                            Backend Developer
+                        </span>
+                        <span className="px-4 py-2 bg-green-500/20 border border-green-500/30 rounded-full text-green-300">
+                            Problem Solver
+                        </span>
+                    </div>
                 </div>
-
-                {/* Call to Action */}
-                <div className="mt-10">
-                    <Link href="https://www.linkedin.com/in/gauravkrrr/">
-                        <button className="bg-gradient-to-tr from-teal-400 to-green-600 hover:from-teal-300 hover:to-green-500 transition-all duration-300 text-white font-semibold px-6 py-3 rounded-full shadow-lg shadow-teal-500/30">
-                            View My LinkedIn 🚀
-                        </button>
-                    </Link>
+                <div className="flex justify-center space-x-6">
+                    <a href="https://github.com/gk022135" className="p-3 bg-blue-600 hover:bg-blue-700 rounded-full transition-colors">
+                        <Github size={20} />
+                    </a>
+                    <a href="https://www.linkedin.com/in/gauravkrrr/" className="p-3 bg-blue-500 hover:bg-blue-600 rounded-full transition-colors">
+                        <Linkedin size={20} />
+                    </a>
+                    <a href="https://www.instagram.com/gaurav_krr/" className="p-3 bg-pink-600 hover:bg-pink-700 rounded-full transition-colors">
+                        <Instagram size={20} />
+                    </a>
+                    <a href="https://x.com/Gaurav__krrr" className="p-3 bg-blue-400 hover:bg-blue-500 rounded-full transition-colors">
+                        <Twitter size={20} />
+                    </a>
+                </div>
+                <div className="mt-12 animate-bounce">
+                    <ChevronDown size={32} className="mx-auto text-gray-400" />
                 </div>
             </div>
-        </div>
-    );
+        </section>
+    )
 }
 
 export default HeroSection;
