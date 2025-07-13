@@ -28,7 +28,7 @@ export default function Home() {
           </div>
 
           {/* Right Side: Hidden on small screens */}
-          <div className="w-1/2 h-full hidden sm:block">
+          <div className="right-0 w-1/2 h-full hidden sm:block">
             <Hero />
           </div>
         </div>
