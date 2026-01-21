@@ -1,6 +1,7 @@
 // app/layout.tsx
 import type { Metadata } from "next";
 import "./globals.css";
+import { NavbarDemo } from "@/components/Navbar";
 
 export const metadata: Metadata = {
   title: "GauravKrr",
@@ -14,6 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <NavbarDemo />
       <body className="bg-black">
         {children}
       </body>

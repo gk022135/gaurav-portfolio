@@ -16,9 +16,9 @@ export default function Footer() {
         </div>
 
         <div className="flex space-x-4 mt-4 md:mt-0">
-          <a href="https://github.com/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400 transition-colors">GitHub</a>
-          <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400 transition-colors">LinkedIn</a>
-          <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400 transition-colors">Twitter</a>
+          <a href="https://github.com/gk022135" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400 transition-colors">GitHub</a>
+          <a href="https://linkedin.com/in/gaurav_krrr" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400 transition-colors">LinkedIn</a>
+          <a href="https://twitter.com/Gaurav_krrr" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400 transition-colors">Twitter</a>
         </div>
       </div>
     </footer>

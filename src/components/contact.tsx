@@ -1,6 +1,7 @@
 "use client"
 
 import { Github, Linkedin, Instagram, Twitter, Mail, Phone, MapPin, Code, Star, Calendar, ExternalLink, ChevronDown, Menu, X } from 'lucide-react';
+import ContactForm from './ContactForm';
 
 export const Contact = () => {
     return (
@@ -53,7 +54,7 @@ export const Contact = () => {
                             </a>
                         </div>
                     </div>
-                    <div className="space-y-6">
+                    {/* <div className="space-y-6">
                         <div>
                             <input
                                 type="text"
@@ -81,7 +82,12 @@ export const Contact = () => {
                         >
                             Send Message
                         </button>
+                    </div> */}
+                    <div className="space-y-6">
+                         <ContactForm />
                     </div>
+
+                   
                 </div>
             </div>
         </section>

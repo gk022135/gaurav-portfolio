@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
+import BlogEditor from "./Editor"
 
 export default function Hero() {
     return (
@@ -34,6 +35,7 @@ export default function Hero() {
                     />
                 </motion.div>
             </div>
+            <BlogEditor onSave={() => {}}/>
         </div>
 
     )

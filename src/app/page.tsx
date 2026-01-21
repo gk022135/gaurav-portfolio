@@ -8,41 +8,66 @@ import Footer from "@/components/Footer";
 import Timeline from "@/components/Timeline";
 import Hero from "@/components/Hero";
 import { FloatingElements } from "@/components/Bacground";
-import { Projects } from "./projects/all-projects";
+import { Projects } from "./projects/page";
 import { Contact } from "@/components/contact";
 import ToolsLearned from "@/components/Tool-learn";
 
 export default function Home() {
   return (
-    <div>
+    <div className="bg-black text-white">
+      {/* Background */}
       <FloatingElements />
-      <NavbarDemo />
-      <div>
-        <FloatingElements />
-        <NavbarDemo />
 
+      {/* Navbar */}
+      {/* <NavbarDemo /> */}
+
+      {/* HERO */}
+      <section id="home" className="min-h-screen">
         <div className="flex w-full h-screen">
-          {/* Left Side: Always visible */}
+          {/* Left */}
           <div className="h-full">
             <HeroSection />
           </div>
 
-          {/* Right Side: Hidden on small screens */}
+          {/* Right */}
           <div className="right-0 w-1/2 h-full hidden sm:block">
             <Hero />
           </div>
         </div>
-      </div>
+      </section>
 
-      <Projects />
+      {/* PROJECTS */}
+      <section id="projects" className="py-24">
+        <Projects />
+      </section>
 
+      {/* CARDS */}
+      <section id="skills" className="py-24">
+        <CardHelper />
+        <ToolsLearned />
+      </section>
 
-      <CardHelper />
-      <ToolsLearned />
-      <Timeline />
-      <AnimatedTestimonialsDemo />
-      <TechMarquee />
-      <Contact />
+      {/* TIMELINE */}
+      <section id="timeline" className="py-24">
+        <Timeline />
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section id="testimonials" className="py-24">
+        <AnimatedTestimonialsDemo />
+      </section>
+
+      {/* TECH */}
+      <section id="tech" className="py-24">
+        <TechMarquee />
+      </section>
+
+      {/* CONTACT */}
+      <section id="contact" className="py-24">
+        <Contact />
+      </section>
+
+      {/* FOOTER */}
       <Footer />
     </div>
   );
