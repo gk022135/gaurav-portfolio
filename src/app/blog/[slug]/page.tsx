@@ -1,23 +1,12 @@
-import { connectDB } from "../../../../src/lib/db";
-import Blog from "../../../../src/lib/models/blogs";
-import editorjsHtml from "editorjs-html";
 import CommentSection from "../../../../src/components/CommentSection";
 import Footer from "@/components/Footer";
+import editorjsHtml from "editorjs-html";
+import BlogShare from "../../../components/blogShare";
 
-import {
-  Link as LinkIcon,
-  Linkedin,
-  Twitter,
-  Instagram,
-  Send,
-} from "lucide-react";
-
-type Props = { params: { slug: string } };
-
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 /* ----------------------------------------------------
-   INLINE IMAGE INJECTION LOGIC (NON-INTRUSIVE)
+   INLINE IMAGE INJECTION LOGIC
 ---------------------------------------------------- */
 function injectInlineImages(html: string) {
   const imageRegex = /\[\[image:(https?:\/\/[^\]]+)\]\]/g;
@@ -26,27 +15,30 @@ function injectInlineImages(html: string) {
     imageRegex,
     (_, url) => `
       <div class="my-12 overflow-hidden rounded-2xl border border-white/10">
-        <img
-          src="${url}"
-          alt="Blog image"
-          loading="lazy"
-          class="w-full object-cover"
-        />
+        <img src="${url}" alt="Blog image" loading="lazy" class="w-full object-cover" />
       </div>
     `
   );
 }
 
-export default async function BlogPage({ params }: Props) {
-  const { slug } = params;
-  await connectDB();
+export default async function BlogPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
 
-  const blog = await Blog.findOne({ slug, published: true }).populate(
-    "author",
-    "name"
-  );
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL ||
+    (process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000");
 
-  if (!blog) {
+  const res = await fetch(`${baseUrl}/api/blogs/${slug}`, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
         Not found
@@ -54,39 +46,33 @@ export default async function BlogPage({ params }: Props) {
     );
   }
 
-  let html = "";
+  const blog = await res.json();
 
+  let html = "";
   try {
     const parser = editorjsHtml();
-
-    if (typeof blog.content === "object") {
-      const parsed = parser.parse(blog.content);
-      html = injectInlineImages(parsed);
-    } else {
-      html = injectInlineImages(String(blog.content || ""));
-    }
-  } catch (e) {
+    const parsed =
+      typeof blog.content === "object"
+        ? parser.parse(blog.content)
+        : String(blog.content || "");
+    html = injectInlineImages(parsed);
+  } catch {
     html =
       typeof blog.content === "string"
         ? injectInlineImages(blog.content)
-        : JSON.stringify(blog.content);
+        : "";
   }
 
+  const postUrl = `${baseUrl}/blog/${blog.slug}`;
 
-  const postUrl = `https://gaurav-portfolio.vercel.app/blog/${blog.slug}`;
-  const encodedUrl = encodeURIComponent(postUrl);
-  const encodedTitle = encodeURIComponent(blog.title);
   return (
     <main className="min-h-screen bg-gradient-to-b from-black to-zinc-900">
       <article className="max-w-3xl mx-auto px-4 py-16 text-white">
-        {/* Header */}
         <header className="mb-12">
-          {/* Title */}
-          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight leading-tight mb-4">
+          <h1 className="text-4xl md:text-5xl font-semibold mb-4">
             {blog.title}
           </h1>
 
-          {/* Meta */}
           <p className="text-sm text-white/60 mb-6">
             By{" "}
             <span className="text-white/80">
@@ -95,59 +81,9 @@ export default async function BlogPage({ params }: Props) {
             · {new Date(blog.createdAt).toLocaleDateString()}
           </p>
 
-          {/* Share Row */}
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="text-xs text-white/50 mr-2">Share:</span>
-
-            {/* Copy Link */}
-
-            {/* LinkedIn */}
-            <a
-              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-md border border-white/10 bg-white/5 p-2 text-white/70 hover:text-white hover:bg-white/10 transition"
-              title="Share on LinkedIn"
-            >
-              <Linkedin size={16} />
-            </a>
-
-            {/* Twitter / X */}
-            <a
-              href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-md border border-white/10 bg-white/5 p-2 text-white/70 hover:text-white hover:bg-white/10 transition"
-              title="Share on Twitter"
-            >
-              <Twitter size={16} />
-            </a>
-
-            {/* Instagram (no direct share, links to profile/share intent) */}
-            <a
-              href="https://www.instagram.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-md border border-white/10 bg-white/5 p-2 text-white/70 hover:text-white hover:bg-white/10 transition"
-              title="Share on Instagram"
-            >
-              <Instagram size={16} />
-            </a>
-
-            {/* Substack */}
-            <a
-              href={`https://substack.com/share?url=${encodedUrl}&title=${encodedTitle}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-md border border-white/10 bg-white/5 p-2 text-white/70 hover:text-white hover:bg-white/10 transition"
-              title="Share on Substack"
-            >
-              <Send size={16} />
-            </a>
-          </div>
+          <BlogShare url={postUrl} title={blog.title} />
         </header>
 
-        {/* Cover Image */}
         {blog.coverImage && (
           <div className="relative mb-12 overflow-hidden rounded-2xl border border-white/10">
             <img
@@ -155,21 +91,14 @@ export default async function BlogPage({ params }: Props) {
               alt={blog.title}
               className="w-full h-[380px] object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           </div>
         )}
 
-        {/* Content */}
         <div
-          className="prose prose-invert prose-lg max-w-none
-                     prose-headings:font-semibold
-                     prose-p:text-white/80
-                     prose-a:text-white
-                     underline-offset-4"
+          className="prose prose-invert prose-lg max-w-none"
           dangerouslySetInnerHTML={{ __html: html }}
         />
 
-        {/* Comments */}
         <CommentSection blogId={String(blog._id)} />
       </article>
 

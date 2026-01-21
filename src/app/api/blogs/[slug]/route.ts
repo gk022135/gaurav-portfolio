@@ -3,11 +3,22 @@ import { connectDB } from "../../../../lib/db";
 import Blog from "../../../../lib/models/blogs";
 import { requireAdmin } from "../../../../lib/auth";
 
-export async function GET(req: Request, { params }: { params: { slug: string } }) {
-  const { slug } = params;
+export async function GET(
+  req: Request,
+  { params }: { params: Promise<{ slug: string }> }
+) {
+  const { slug } = await params;
+
   await connectDB();
-  const blog = await Blog.findOne({ slug, published: true }).populate("author", "name");
-  if (!blog) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  const blog = await Blog.findOne({ slug, published: true }).populate(
+    "author",
+    "name"
+  );
+
+  if (!blog) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   return NextResponse.json(blog);
 }
 

@@ -12,7 +12,7 @@ export default async function BlogListPage() {
     .populate("author", "name");
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-black to-zinc-900">
+    <main className="min-h-screen bg-gradient-to-b from-black to-zinc-900 mt-5">
       <div className="max-w-5xl mx-auto px-4 py-14 text-white">
         <header className="mb-10">
           <h1 className="text-4xl font-semibold tracking-tight">
