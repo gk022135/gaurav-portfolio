@@ -6,17 +6,22 @@ import BlogShare from "../../../components/blogShare";
 export const dynamic = "force-dynamic";
 
 /* ----------------------------------------------------
-   INLINE IMAGE INJECTION LOGIC
+   INLINE IMAGE INJECTION LOGIC (PROD SAFE)
 ---------------------------------------------------- */
 function injectInlineImages(html: string) {
-  const imageRegex = /\[\[image:(https?:\/\/[^\]]+)\]\]/g;
+  const imageRegex = /\[\[image:(https?:\/\/[^\]]+)\]\]/gi;
 
   return html.replace(
     imageRegex,
     (_, url) => `
-      <div class="my-12 overflow-hidden rounded-2xl border border-white/10">
-        <img src="${url}" alt="Blog image" loading="lazy" class="w-full object-cover" />
-      </div>
+      <figure class="my-14 overflow-hidden rounded-2xl border border-white/10 bg-black">
+        <img
+          src="${url}"
+          alt="Blog image"
+          loading="lazy"
+          class="w-full object-cover"
+        />
+      </figure>
     `
   );
 }
@@ -48,14 +53,18 @@ export default async function BlogPage({
 
   const blog = await res.json();
 
+  /* ---------------- PARSE + FIX CONTENT ---------------- */
   let html = "";
   try {
     const parser = editorjsHtml();
-    const parsed =
-      typeof blog.content === "object"
-        ? parser.parse(blog.content)
-        : String(blog.content || "");
-    html = injectInlineImages(parsed);
+    const parsed = parser.parse(blog.content);
+
+    // 🔥 CRITICAL FIX
+    const htmlString = Array.isArray(parsed)
+      ? parsed.join("")
+      : String(parsed || "");
+
+    html = injectInlineImages(htmlString);
   } catch {
     html =
       typeof blog.content === "string"
@@ -66,10 +75,11 @@ export default async function BlogPage({
   const postUrl = `${baseUrl}/blog/${blog.slug}`;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-black to-zinc-900">
-      <article className="max-w-3xl mx-auto px-4 py-16 text-white">
-        <header className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-semibold mb-4">
+    <main className="min-h-screen bg-gradient-to-b from-black via-zinc-900 to-black">
+      <article className="max-w-3xl mx-auto px-4 py-20 text-white">
+        {/* Header */}
+        <header className="mb-14">
+          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight leading-tight mb-5">
             {blog.title}
           </h1>
 
@@ -84,22 +94,35 @@ export default async function BlogPage({
           <BlogShare url={postUrl} title={blog.title} />
         </header>
 
+        {/* Cover Image */}
         {blog.coverImage && (
-          <div className="relative mb-12 overflow-hidden rounded-2xl border border-white/10">
+          <div className="relative mb-16 overflow-hidden rounded-2xl border border-white/10">
             <img
               src={blog.coverImage}
               alt={blog.title}
-              className="w-full h-[380px] object-cover"
+              className="w-full h-[420px] object-cover"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           </div>
         )}
 
+        {/* Content */}
         <div
-          className="prose prose-invert prose-lg max-w-none"
+          className="
+            prose prose-invert prose-lg max-w-none
+            prose-headings:font-semibold
+            prose-p:text-white/80
+            prose-li:text-white/80
+            prose-strong:text-white
+            prose-a:text-white underline-offset-4
+          "
           dangerouslySetInnerHTML={{ __html: html }}
         />
 
-        <CommentSection blogId={String(blog._id)} />
+        {/* Comments */}
+        <div className="mt-20">
+          <CommentSection blogId={String(blog._id)} />
+        </div>
       </article>
 
       <Footer />
