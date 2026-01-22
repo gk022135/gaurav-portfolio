@@ -7,7 +7,6 @@ const NAV_ITEMS = [
   { label: "Projects", id: "projects" },
   { label: "Skills", id: "skills" },
   { label: "Timeline", id: "timeline" },
-  { label: "Contact", id: "contact" },
   
 ];
 
@@ -35,6 +34,12 @@ export function NavbarDemo() {
 
         {/* Desktop */}
         <div className="hidden md:flex space-x-8">
+           <a
+              href="/about"
+              className="block w-full text-left text-gray-300 hover:text-white"
+            >
+              Me
+            </a>
            <a
               href="/blog"
               className="block w-full text-left text-gray-300 hover:text-white"
@@ -71,6 +76,12 @@ export function NavbarDemo() {
       {isMenuOpen && (
         <div className="md:hidden bg-black/95 border-t border-gray-800">
           <div className="px-4 py-3 space-y-2">
+             <a
+              href="/about"
+              className="block w-full text-left text-gray-300 hover:text-white"
+            >
+              Me
+            </a>
             <a
               href="/blog"
               className="block w-full text-left text-gray-300 hover:text-white"
