@@ -32,6 +32,7 @@ export default async function BlogPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  console.log("Fetching blog with slug:", slug);
 
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL ||

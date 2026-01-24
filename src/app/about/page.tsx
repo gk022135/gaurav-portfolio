@@ -34,6 +34,7 @@ export default function About() {
     };
 
     githubcall();
+    
     leetcodcall();
   }, []);
 
