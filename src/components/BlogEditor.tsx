@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Editor from "./Editor";
+import HtmlPostFrame from "./HtmlPostFrame";
 
 type Props = {
   initialData?: any;
@@ -37,25 +37,20 @@ const apiHeaders = {
 };
 
 export default function BlogEditor({ initialData, slug }: Props) {
-  const initialContent =
-    typeof initialData?.content === "string"
-      ? initialData.content
-      : typeof initialData?.content?.editorContent === "string"
-        ? initialData.content.editorContent
-        : "";
-
-  const initialHtmlMarkup =
-    typeof initialData?.content?.htmlMarkup === "string"
-      ? initialData.content.htmlMarkup
-      : "";
-  const initialHtmlStyles =
-    typeof initialData?.content?.htmlStyles === "string"
-      ? initialData.content.htmlStyles
-      : "";
-  const initialHtmlScripts =
-    typeof initialData?.content?.htmlScripts === "string"
-      ? initialData.content.htmlScripts
-      : "";
+  const initialSource = typeof initialData?.content === "string"
+    ? initialData.content
+    : [
+        "<!doctype html>",
+        "<html>",
+        "<head>",
+        initialData?.content?.htmlStyles ? `<style>${initialData.content.htmlStyles}</style>` : "",
+        "</head>",
+        "<body>",
+        initialData?.content?.htmlMarkup || initialData?.content?.editorContent || "",
+        initialData?.content?.htmlScripts ? `<script>${initialData.content.htmlScripts}</script>` : "",
+        "</body>",
+        "</html>",
+      ].filter(Boolean).join("\n");
 
   const [saving, setSaving] = useState(false);
   const [title, setTitle] = useState(initialData?.title || "");
@@ -65,10 +60,7 @@ export default function BlogEditor({ initialData, slug }: Props) {
     Array.isArray(initialData?.tags) ? initialData.tags.join(", ") : ""
   );
   const [published, setPublished] = useState(Boolean(initialData?.published));
-  const [isHtmlPost, setIsHtmlPost] = useState(Boolean(initialData?.isHtmlPost));
-  const [htmlMarkup, setHtmlMarkup] = useState(initialHtmlMarkup);
-  const [htmlStyles, setHtmlStyles] = useState(initialHtmlStyles);
-  const [htmlScripts, setHtmlScripts] = useState(initialHtmlScripts);
+  const [source, setSource] = useState(initialSource);
 
   const [courses, setCourses] = useState<CourseType[]>([]);
   const [courseSelection, setCourseSelection] = useState<string>(
@@ -88,30 +80,6 @@ export default function BlogEditor({ initialData, slug }: Props) {
   const [newCoursePrice, setNewCoursePrice] = useState("0");
   const [newChapterTitle, setNewChapterTitle] = useState("");
   const [newSectionTitle, setNewSectionTitle] = useState("");
-
-  function buildHtmlPostContent() {
-    const markup = htmlMarkup || "<div></div>";
-    const styles = htmlStyles ? `<style>${htmlStyles}</style>` : "";
-    const scripts = htmlScripts ? `<script>${htmlScripts}<\/script>` : "";
-
-    return `${styles}${markup}${scripts}`;
-  }
-
-  function buildCombinedContent(editorContent: string) {
-    const hasCustomCode = Boolean(htmlMarkup || htmlStyles || htmlScripts);
-
-    if (!hasCustomCode && !isHtmlPost) {
-      return editorContent;
-    }
-
-    return {
-      editorContent,
-      htmlMarkup,
-      htmlStyles,
-      htmlScripts,
-      isHtmlPost,
-    };
-  }
 
   useEffect(() => {
     async function fetchCourses() {
@@ -147,10 +115,10 @@ export default function BlogEditor({ initialData, slug }: Props) {
     }
   }, [courses, courseSelection, selectedCourse]);
 
-  async function handleEditorSave(content: string) {
+  async function handleSave() {
     setSaving(true);
     try {
-      const resolvedContent = isHtmlPost ? buildHtmlPostContent() : content;
+      const resolvedContent = source || "<!doctype html><html><body></body></html>";
       let resolvedCourseId = courseSelection && courseSelection !== "new-course" ? courseSelection : "";
       let resolvedChapterId = chapterSelection && chapterSelection !== "new-chapter" ? chapterSelection : "";
       let resolvedSectionId = sectionSelection && sectionSelection !== "new-section" ? sectionSelection : "";
@@ -224,7 +192,7 @@ export default function BlogEditor({ initialData, slug }: Props) {
                 (shouldCreateNewCourse
                   ? `${newCourseTitle || title || "Untitled"} section`
                   : `${title || "Untitled"} section`),
-              content,
+              content: resolvedContent,
             }),
           }
         );
@@ -257,7 +225,7 @@ export default function BlogEditor({ initialData, slug }: Props) {
         courseId: resolvedCourseId || undefined,
         chapterId: resolvedChapterId || undefined,
         sectionId: resolvedSectionId || undefined,
-        isHtmlPost,
+        isHtmlPost: true,
         slug:
           postSlug ||
           (title
@@ -284,6 +252,7 @@ export default function BlogEditor({ initialData, slug }: Props) {
         throw new Error(responseBody.error || "Save failed");
       }
 
+      if (typeof responseBody.content === "string") setSource(responseBody.content);
       alert("Saved");
     } catch (error: any) {
       alert(error.message || "Error");
@@ -348,47 +317,7 @@ export default function BlogEditor({ initialData, slug }: Props) {
             />
           </label>
 
-          <label className="flex items-center justify-between rounded-lg border border-white/10 bg-black/30 px-4 py-3 md:col-span-2">
-            <span className="text-sm text-white/80">Add HTML / CSS / JS block</span>
-            <input
-              type="checkbox"
-              checked={isHtmlPost}
-              onChange={(e) => setIsHtmlPost(e.target.checked)}
-              className="h-4 w-4 accent-white"
-            />
-          </label>
-
-          {isHtmlPost && (
-            <div className="grid grid-cols-1 gap-4 md:col-span-2">
-              <p className="text-xs text-white/45">
-                This block will render alongside the normal post content.
-              </p>
-              <textarea
-                value={htmlMarkup}
-                onChange={(e) => setHtmlMarkup(e.target.value)}
-                placeholder="Paste HTML here"
-                rows={10}
-                className="w-full rounded-lg border border-white/10 bg-black/40 px-4 py-3 text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan-300/30"
-              />
-              <textarea
-                value={htmlStyles}
-                onChange={(e) => setHtmlStyles(e.target.value)}
-                placeholder="Paste CSS here"
-                rows={8}
-                className="w-full rounded-lg border border-white/10 bg-black/40 px-4 py-3 text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan-300/30"
-              />
-              <textarea
-                value={htmlScripts}
-                onChange={(e) => setHtmlScripts(e.target.value)}
-                placeholder="Paste JavaScript here"
-                rows={8}
-                className="w-full rounded-lg border border-white/10 bg-black/40 px-4 py-3 text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan-300/30"
-              />
-            </div>
-          )}
-
-          {!isHtmlPost && (
-            <label className="flex flex-col gap-2 rounded-lg border border-white/10 bg-black/30 px-4 py-3 md:col-span-2">
+          <label className="flex flex-col gap-2 rounded-lg border border-white/10 bg-black/30 px-4 py-3 md:col-span-2">
               <span className="text-sm text-white/80">Course</span>
               <select
                 value={courseSelection}
@@ -407,8 +336,7 @@ export default function BlogEditor({ initialData, slug }: Props) {
                 ))}
                 <option value="new-course">Create New Course</option>
               </select>
-            </label>
-          )}
+          </label>
 
           {courseSelection === "new-course" && (
             <div className="grid grid-cols-1 gap-4 rounded-2xl border border-cyan-300/20 bg-cyan-500/5 p-4 md:col-span-2 md:grid-cols-2">
@@ -522,7 +450,52 @@ export default function BlogEditor({ initialData, slug }: Props) {
         </div>
       </div>
 
-      <Editor onSave={handleEditorSave} initialData={initialContent} />
+      <div className="grid gap-4 rounded-2xl border border-white/10 bg-zinc-950/80 p-5 shadow-2xl shadow-black/20 lg:grid-cols-2">
+        <div className="min-w-0">
+          <div className="mb-3 flex items-center justify-between gap-4">
+            <div>
+              <h3 className="text-base font-semibold text-white">HTML source</h3>
+              <p className="mt-1 text-xs text-white/45">A complete HTML file. Include CSS in <code>&lt;style&gt;</code> and JavaScript in <code>&lt;script&gt;</code>.</p>
+            </div>
+            <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-2.5 py-1 text-xs text-cyan-100">Code-first</span>
+          </div>
+          <textarea
+            value={source}
+            onChange={(event) => setSource(event.target.value)}
+            spellCheck={false}
+            placeholder={'<!doctype html>\n<html>\n  <body>Hello world</body>\n</html>'}
+            className="min-h-[520px] w-full resize-y rounded-xl border border-white/10 bg-black/40 p-4 font-mono text-sm leading-6 text-white outline-none transition focus:border-cyan-300/40"
+            aria-label="HTML, CSS, and JavaScript source"
+          />
+        </div>
+
+        <div className="min-w-0">
+          <div className="mb-3 flex items-center justify-between gap-4">
+            <div>
+              <h3 className="text-base font-semibold text-white">Live preview</h3>
+              <p className="mt-1 text-xs text-white/45">Runs in a sandboxed iframe and updates as you type.</p>
+            </div>
+            <span className="text-xs text-white/45">Scripts enabled</span>
+          </div>
+          <HtmlPostFrame
+            title="Blog post preview"
+            source={source}
+            className="w-full rounded-xl border border-white/10 bg-white"
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-zinc-950/80 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-xs text-white/45">External image URLs are imported into MongoDB GridFS when you save.</p>
+        <button
+          type="button"
+          onClick={handleSave}
+          disabled={saving}
+          className="inline-flex items-center justify-center rounded-lg bg-cyan-200 px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {published ? "Save & publish" : "Save draft"}
+        </button>
+      </div>
 
       {saving && (
         <div className="flex items-center gap-2 text-sm text-white/60">

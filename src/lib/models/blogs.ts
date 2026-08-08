@@ -24,6 +24,11 @@ const BlogSchema = new Schema(
       required: true,
     },
 
+    isHtmlPost: {
+      type: Boolean,
+      default: false,
+    },
+
     coverImage: String,
 
     tags: [String],

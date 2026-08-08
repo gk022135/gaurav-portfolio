@@ -2,6 +2,7 @@ import CommentSection from "../../../../src/components/CommentSection";
 import Footer from "@/components/Footer";
 import editorjsHtml from "editorjs-html";
 import BlogShare from "../../../components/blogShare";
+import HtmlPostFrame from "@/components/HtmlPostFrame";
 
 import './blog.css';
 
@@ -30,6 +31,10 @@ function injectInlineImages(html: string) {
 
 function buildHtmlPreviewSource(blog: any) {
   if (typeof blog.content === "string") {
+    if (/<!doctype\s+html|<html[\s>]/i.test(blog.content)) {
+      return blog.content;
+    }
+
     return `<!doctype html>
 <html>
   <head>
@@ -154,11 +159,10 @@ export default async function BlogPage({
 
         {/* Content */}
         {isHtmlPost ? (
-          <iframe
+          <HtmlPostFrame
             title={blog.title}
-            srcDoc={buildHtmlPreviewSource(blog)}
-            sandbox="allow-scripts"
-            className="min-h-[600px] w-full rounded-2xl border border-white/10 bg-black"
+            source={buildHtmlPreviewSource(blog)}
+            className="w-full rounded-2xl border border-white/10 bg-black"
           />
         ) : (
           <div
