@@ -6,11 +6,19 @@ import Footer from "@/components/Footer";
 export const dynamic = "force-dynamic";
 
 export default async function BlogListPage() {
-  await connectDB();
-  const blogs = await Blog.find({ published: true })
-    .sort({ createdAt: -1 })
-    .populate("author", "name")
-    .lean();
+  let blogs: any[] = [];
+  let databaseUnavailable = false;
+
+  try {
+    await connectDB();
+    blogs = await Blog.find({ published: true })
+      .sort({ createdAt: -1 })
+      .populate("author", "name")
+      .lean();
+  } catch (error) {
+    databaseUnavailable = true;
+    console.error("Unable to load blog posts", error);
+  }
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-black to-zinc-900 mt-5">
@@ -24,11 +32,17 @@ export default async function BlogListPage() {
           </p>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {blogs.map((b: any) => (
-            <BlogCard key={b._id} blog={b} />
-          ))}
-        </div>
+        {databaseUnavailable ? (
+          <div className="rounded-2xl border border-white/10 bg-black/30 p-6 text-sm text-white/70">
+            Blog posts are temporarily unavailable. Please try again shortly.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {blogs.map((b: any) => (
+              <BlogCard key={b._id} blog={b} />
+            ))}
+          </div>
+        )}
       </div>
       <Footer />
     </main>

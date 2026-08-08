@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import HtmlPostFrame from "./HtmlPostFrame";
 
 type Props = {
   initialData?: any;
@@ -476,11 +477,10 @@ export default function BlogEditor({ initialData, slug }: Props) {
             </div>
             <span className="text-xs text-white/45">Scripts enabled</span>
           </div>
-          <iframe
+          <HtmlPostFrame
             title="Blog post preview"
-            srcDoc={source || "<!doctype html><html><body></body></html>"}
-            sandbox="allow-scripts"
-            className="min-h-[520px] w-full rounded-xl border border-white/10 bg-white"
+            source={source}
+            className="w-full rounded-xl border border-white/10 bg-white"
           />
         </div>
       </div>
