@@ -1,12 +1,10 @@
 // app/page.tsx
-import { NavbarDemo } from "@/components/Navbar";
 import HeroSection from "@/components/ui/HeroSection";
 import CardHelper from "@/components/Card3DHelper";
 import { AnimatedTestimonialsDemo } from "@/components/Learn";
 import TechMarquee from "@/components/AllLearn";
 import Footer from "@/components/Footer";
-import Timeline from "@/components/Timeline";
-import Hero from "@/components/Hero";
+import EngineeringFocus from "@/components/EngineeringFocus";
 import { FloatingElements } from "@/components/Bacground";
 import { Projects } from "./projects/page";
 import { Contact } from "@/components/contact";
@@ -17,13 +15,10 @@ import ProfessionalSnapshot from "@/components/ProfessionalSnapshot";
 
 export default function Home() {
   return (
-    <div className="bg-black text-white relative">
+    <div className="relative text-foreground">
       {/* Background */}
       <FloatingElements />
       <ProfileVisitorTracker />
-
-      {/* Navbar */}
-      <NavbarDemo />
 
       {/* HERO */}
       <section
@@ -65,13 +60,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TIMELINE */}
+      {/* ENGINEERING APPROACH */}
       <section
-        id="timeline"
+        id="approach"
         className="py-24 flex items-center justify-center"
       >
         <div className="max-w-5xl w-full px-6 text-center">
-          <Timeline />
+          <EngineeringFocus />
         </div>
       </section>
 

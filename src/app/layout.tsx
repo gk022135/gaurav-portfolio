@@ -15,11 +15,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-black text-white antialiased">
+      <body className="antialiased">
         <NavbarDemo />
 
         {/* Page content offset for fixed navbar */}
-        <main className="pt-16 sm:pt-18">
+        <main className="theme-surface pt-16 sm:pt-18">
           {children}
         </main>
       </body>
