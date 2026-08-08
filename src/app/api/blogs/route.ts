@@ -3,6 +3,7 @@ import { connectDB } from "../../../lib/db";
 import Blog from "../../../lib/models/blogs";
 import User from "../../../lib/models/user";
 import { requireAdmin } from "../../../lib/auth";
+import { localizeBlogImages } from "../../../lib/blogAssets";
 
 export async function GET() {
   await connectDB();
@@ -30,10 +31,15 @@ export async function POST(req: Request) {
       }
     }
 
+    const content = typeof body.content === "string" && body.isHtmlPost
+      ? await localizeBlogImages(body.content)
+      : body.content;
+
     const blog = await Blog.create({
       title: body.title,
       slug: body.slug,
-      content: body.content,
+      content,
+      isHtmlPost: Boolean(body.isHtmlPost),
       coverImage: body.coverImage,
       tags: body.tags || [],
       author: author?._id,

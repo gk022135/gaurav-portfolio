@@ -30,6 +30,10 @@ function injectInlineImages(html: string) {
 
 function buildHtmlPreviewSource(blog: any) {
   if (typeof blog.content === "string") {
+    if (/<!doctype\s+html|<html[\s>]/i.test(blog.content)) {
+      return blog.content;
+    }
+
     return `<!doctype html>
 <html>
   <head>
