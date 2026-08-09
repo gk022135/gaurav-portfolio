@@ -35,6 +35,10 @@ export function NavbarDemo() {
     setIsDark(dark);
   }, []);
 
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
+
   const toggleTheme = () => {
     const dark = !isDark;
     document.documentElement.classList.toggle("dark", dark);
@@ -86,6 +90,8 @@ export function NavbarDemo() {
           className="md:hidden rounded-lg p-2 text-foreground hover:bg-muted"
           onClick={() => setIsMenuOpen((v) => !v)}
           aria-label="Toggle Menu"
+          aria-expanded={isMenuOpen}
+          aria-controls="mobile-navigation"
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -93,8 +99,11 @@ export function NavbarDemo() {
 
       {/* MOBILE MENU */}
       {isMenuOpen && (
-        <div className="md:hidden fixed inset-0 top-16 bg-background/95 backdrop-blur-lg">
-          <div className="px-6 py-6 space-y-4 text-lg">
+        <div
+          id="mobile-navigation"
+          className="absolute inset-x-0 top-16 z-50 h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain bg-background pb-[env(safe-area-inset-bottom)] shadow-2xl md:hidden"
+        >
+          <div className="space-y-2 px-6 py-5 text-lg">
             {showSectionNav &&
               NAV_ITEMS.map((item) => (
                 <button
@@ -125,7 +134,8 @@ export function NavbarDemo() {
             >
               Inbox
             </MobileLink>
-            <div className="pt-2">
+            <div className="flex items-center justify-between pt-4">
+              <span className="text-sm text-muted-foreground">Appearance</span>
               <ThemeToggle isDark={isDark} onClick={toggleTheme} />
             </div>
           </div>
